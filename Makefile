@@ -1,6 +1,6 @@
 make:
-	gcc -o fetch fetch.c
+	gcc -o fetch fetch.c -lm
 install: make
-	cp fetch /usr/bin/fetch
+	cp fetch /usr/local/bin/fetch
 uninstall:
-	rm /usr/bin/fetch
+	rm /usr/local/bin/fetch
