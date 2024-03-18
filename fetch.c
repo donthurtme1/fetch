@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include "ascii.h"
 
 /*
@@ -27,6 +28,19 @@ void setdistro(const char *distro_str) {
 	}
 }
 
+char *concat(const char *restrict start, const char *restrict end) {
+	int start_size = 0, end_size = 0;
+	while (start[++start_size]) {}; /* Pre increment counts null terminator, but misses first value. */
+	while (end[end_size++]) {};		/* Post increment counts including the null terminator. */
+
+	char *s = (char *)malloc(start_size + end_size);
+	int i = 0;
+	for (; i < start_size; i++) { s[i] = start[i]; }
+	i = 0;
+	for (; i < end_size; i++) { s[start_size + i] = end[i]; }
+	return s;
+}
+
 char getarg(const char *arg) {
 	if (arg == NULL) return 0;
 	if (arg[0] == '-') return arg[1];
@@ -47,8 +61,12 @@ int main(int argc, char *argv[]) {
 
 	/* Storage */
 	int total_storage, used_storage, storage_percent;
-	if (system("df --total | grep total > /home/basil/fetch/storage") >= 0) {
-		FILE *fstorage = fopen("/home/basil/fetch/storage", "r");
+	const char *fetch_cache_dir = concat(getenv("HOME"), "/.cache/fetch/");
+	const char *fetch_storage = concat(fetch_cache_dir, "storage");
+	
+	mkdir(fetch_cache_dir, S_IRWXU);
+	if (system(concat("df --total | grep total > ", fetch_storage)) >= 0) {
+		FILE *fstorage = fopen(fetch_storage, "r");
 		fscanf(fstorage, "%*s %d %d %*s %d", &total_storage, &used_storage, &storage_percent);
 		fclose(fstorage);
 	}
