@@ -4,18 +4,10 @@
 #include <sys/stat.h>
 #include "ascii.h"
 
-/*
-static const char partition_table[] = "\e[B\e[47G\
-sda                  [931.5 GiB]\e[B\e[47G\
-├─sda1   /boot   [##-----------]  (15%)   - /     1 GiB\e[B\e[47G\
-├─sda2   [SWAP]  [-------------]  ( 0%)   - /    16 GiB\e[B\e[47G\
-├─sda3   /       [###----------]  (34%)  13 /    40 GiB\e[B\e[47G\
-└─sda4   /home   [#------------]  ( 7%)  19 / 874.5 GiB";
-*/
-
 static const char *ascii_distro = arch_ascii;
 
 static const char field_format[] = "\e[%s;1m%s\e[0m: %s\e[B\e[43G";
+static const char simple_format[] = "\e[%s;1m%s\e[0m %s\e[B\e[43G";
 static char storage_bar[12] = "------------";
 
 /* Set "ascii_distro" to specified distro if it exists. */
@@ -81,10 +73,10 @@ int main(int argc, char *argv[]) {
 	/* Print stuff. */
 	printf("\e[%s;1m", colour);
 	printf("%s", ascii_distro);
-	printf("\e[43G"); // Cursor position.
+	printf("\e[B\e[43G"); // Cursor position.
 	/* TODO: make cursor position and text colour dependant on selected ascii art. */
+	/*
 	printf("\e[%s;1m%s\e[0m\e[B\e[43G%s\e[B\e[43G", colour, "Simplefetch", "~~~~~~~~~~~"); // Title.
-	//printf("", ); // Date.
 	printf(field_format, colour, "Distro", "Arch Linux");
 	printf(field_format, colour, "Window Manager", "dwl");
 	printf(field_format, colour, "Packages", "? - pacman");
@@ -95,21 +87,25 @@ int main(int argc, char *argv[]) {
 	printf(field_format, colour, "GPU", "AMD Radeon RX 6600");
 	printf(field_format, colour, "Memory", "16 GiB");
 	printf("\e[%s;1mStorage\e[0m: %d / %d GiB\e[53C\e[19D[%s] (%d%%)\e[B\e[43G", colour, used_storage, total_storage, storage_bar, storage_percent);
-	//printf(field_format, "Partition Table", partition_table);
 
 	printf("\e[B\e[43G");
 	printf("\e[30m███\e[31m███\e[32m███\e[33m███\e[34m███\e[35m███\e[36m███\e[37m███\e[B\e[43G");
 	printf("\e[90m███\e[91m███\e[92m███\e[93m███\e[94m███\e[95m███\e[96m███\e[97m███\e[B\e[43G");
-
 	printf("\e[4E");
+	*/
+
+	printf("\e[%s;1m%s \e[0m\e[90m%s\e[0m%s\e[B\e[43G", colour, "󰍹 ", "Distro\t\t", "Arch Linux");
+	printf("\e[%s;1m%s \e[0m\e[90m%s\e[0m%s\e[B\e[43G", colour, "󱂬 ", "WM\t\t\t", "dwl");
+	printf("\e[%s;1m%s \e[0m\e[90m%s\e[0m%s\e[B\e[43G", colour, " ", "Packages\t", "pacman");
+	printf("\e[%s;1m%s \e[0m\e[90m%s\e[0m%s\e[B\e[43G", colour, " ", "Terminal\t", "Alacritty");
+	printf("\e[%s;1m%s \e[0m\e[90m%s\e[0m%s\e[B\e[43G", colour, " ", "Uptime\t\t", "bash");
+	printf("\e[%s;1m%s \e[0m\e[90m%s\e[0m%s\e[B\e[43G", colour, " ", "Browser\t", "Firefox");
+	printf("\e[%s;1m%s \e[0m\e[90m%s\e[0m%s\e[B\e[43G", colour, " ", "CPU\t\t", "AMD Ryzen 3");
+
+	printf("\e[B\e[43G");
+	printf("\e[30m███\e[31m███\e[32m███\e[33m███\e[34m███\e[35m███\e[36m███\e[37m███\e[B\e[43G");
+	printf("\e[90m███\e[91m███\e[92m███\e[93m███\e[94m███\e[95m███\e[96m███\e[97m███\e[B\e[43G");
+	printf("\e[8E");
 
 	return 0;
 }
-
-/*
-// Convert storage values to floats (do before "[var] = [var] >> 20").
-float total_f = (float)total_storage, used_f = (float)used_storage;
-// Divide by 2048 by subtracting 20 from the exponent.
- *(int *)&total_f -= 0x0a000000;
- *(int *)&used_f -= 0x0a000000;
- */
