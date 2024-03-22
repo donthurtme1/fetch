@@ -10,6 +10,28 @@ static const char field_format[] = "\e[%s;1m%s\e[0m: %s\e[B\e[43G";
 static const char simple_format[] = "\e[%s;1m%s\e[0m %s\e[B\e[43G";
 static char storage_bar[12] = "------------";
 
+static const char *output_format[] = {
+	"\e[%s;1m󰍹  \e[0m\e[90mDistro \t\e[0m%s",
+	"\e[%s;1m󱂬  \e[0m\e[90mWM \t\t\e[0m%s",
+	"\e[%s;1m  \e[0m\e[90mPackages \t\e[0m%s",
+	"\e[%s;1m  \e[0m\e[90mTerminal \t\e[0m%s",
+	"\e[%s;1m  \e[0m\e[90mUptime \t\e[0m%s",
+	"\e[%s;1m  \e[0m\e[90mBrowser \t\e[0m%s",
+	"\e[%s;1m  \e[0m\e[90mCPU \t\t\e[0m%s",
+	NULL
+};
+
+static const char *output_value[] = {
+	"Arch Linux",
+	"dwl",
+	"{packages}",
+	"Alacritty",
+	"{uptime}",
+	"Firefox",
+	"AMD Ryzen 3",
+	NULL
+};
+
 /* Set "ascii_distro" to specified distro if it exists. */
 void setdistro(const char *distro_str) {
 	if (distro_str[0] == 'a') ascii_distro = arch_ascii;
@@ -72,8 +94,8 @@ int main(int argc, char *argv[]) {
 
 	/* Print stuff. */
 	printf("\e[%s;1m", colour);
-	printf("%s", ascii_distro);
-	printf("\e[B\e[43G"); // Cursor position.
+	printf("%s", space_invader);
+	//printf("\e[B\e[43G"); // Cursor position.
 	/* TODO: make cursor position and text colour dependant on selected ascii art. */
 	/*
 	printf("\e[%s;1m%s\e[0m\e[B\e[43G%s\e[B\e[43G", colour, "Simplefetch", "~~~~~~~~~~~"); // Title.
@@ -94,18 +116,17 @@ int main(int argc, char *argv[]) {
 	printf("\e[4E");
 	*/
 
-	printf("\e[%s;1m%s \e[0m\e[90m%s\e[0m%s\e[B\e[43G", colour, "󰍹 ", "Distro\t\t", "Arch Linux");
-	printf("\e[%s;1m%s \e[0m\e[90m%s\e[0m%s\e[B\e[43G", colour, "󱂬 ", "WM\t\t\t", "dwl");
-	printf("\e[%s;1m%s \e[0m\e[90m%s\e[0m%s\e[B\e[43G", colour, " ", "Packages\t", "pacman");
-	printf("\e[%s;1m%s \e[0m\e[90m%s\e[0m%s\e[B\e[43G", colour, " ", "Terminal\t", "Alacritty");
-	printf("\e[%s;1m%s \e[0m\e[90m%s\e[0m%s\e[B\e[43G", colour, " ", "Uptime\t\t", "bash");
-	printf("\e[%s;1m%s \e[0m\e[90m%s\e[0m%s\e[B\e[43G", colour, " ", "Browser\t", "Firefox");
-	printf("\e[%s;1m%s \e[0m\e[90m%s\e[0m%s\e[B\e[43G", colour, " ", "CPU\t\t", "AMD Ryzen 3");
+	i = 0;
+	while (output_format[i]) {
+		printf("\e[B\e[28G");
+		printf(output_format[i], colour, output_value[i]);
+		i++;
+	}
 
-	printf("\e[B\e[43G");
-	printf("\e[30m███\e[31m███\e[32m███\e[33m███\e[34m███\e[35m███\e[36m███\e[37m███\e[B\e[43G");
-	printf("\e[90m███\e[91m███\e[92m███\e[93m███\e[94m███\e[95m███\e[96m███\e[97m███\e[B\e[43G");
-	printf("\e[8E");
+	printf("\e[2B\e[28G");
+	printf("\e[30m███\e[31m███\e[32m███\e[33m███\e[34m███\e[35m███\e[36m███\e[37m███\e[B\e[28G");
+	printf("\e[90m███\e[91m███\e[92m███\e[93m███\e[94m███\e[95m███\e[96m███\e[97m███\e[B\e[28G");
+	printf("\e[E");
 
 	return 0;
 }
