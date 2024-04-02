@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
 		packages_str[i] = (package_count % 10) + '0';
 		package_count /= 10;
 	}
-	output_value[1] = packages_str;
+	output_value[1] = concat(packages_str, " pacman");
 
 	/* Uptime */
 	struct sysinfo sys_info;
