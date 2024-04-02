@@ -78,10 +78,34 @@ int main(int argc, char *argv[]) {
 		else if (c == 'v') vertical = 1;
 	}
 
+	/* Setup */
 	struct winsize term_size;
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &term_size);
 
+	const char *fetch_cache_dir = concat(getenv("HOME"), "/.cache/fetch/");
+	mkdir(fetch_cache_dir, S_IRWXU);
+
 	/* Packages */
+	int package_count;
+	const char *fetch_packages = concat(fetch_cache_dir, "packages");
+
+	if (system(concat("pacman -Qq | wc -l > ", fetch_packages)) >= 0) {
+		FILE *fpackages = fopen(fetch_packages, "r");
+		fscanf(fpackages, "%d", &package_count);
+		fclose(fpackages);
+	}
+
+	register int number = package_count;
+	int digits = 0;
+	while (number) { number /= 10; digits++; }
+
+	char packages_str[digits + 1];
+	packages_str[digits] = '\0';
+	for (int i = digits - 1; i > -1; i--) {
+		packages_str[i] = (package_count % 10) + '0';
+		package_count /= 10;
+	}
+	output_value[1] = packages_str;
 
 	/* Uptime */
 	struct sysinfo sys_info;
@@ -98,10 +122,8 @@ int main(int argc, char *argv[]) {
 
 	/* Storage */
 	int total_storage, used_storage, storage_percent;
-	const char *fetch_cache_dir = concat(getenv("HOME"), "/.cache/fetch/");
 	const char *fetch_storage = concat(fetch_cache_dir, "storage");
 	
-	mkdir(fetch_cache_dir, S_IRWXU);
 	if (system(concat("df --total | grep home > ", fetch_storage)) >= 0) {
 		FILE *fstorage = fopen(fetch_storage, "r");
 		fscanf(fstorage, "%*s %d %d %*s %d", &total_storage, &used_storage, &storage_percent);
