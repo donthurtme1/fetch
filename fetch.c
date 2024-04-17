@@ -143,9 +143,9 @@ int main(int argc, char *argv[]) {
 	i = 0;
 	printf("\e[%s;1m", colour);
 	if (!vertical) {
-		printf("\e[2B\e[8C%s", space_invader_offset);
+		printf("\e[1B\e[7C%s", simple_ascii_arch);
 
-		printf("\e[3B\e[3G");
+		printf("\e[2B\e[3G");
 		printf("\e[30m███\e[31m███\e[32m███\e[33m███\e[34m███\e[35m███\e[36m███\e[37m███");
 		printf("\e[B\e[3G");
 		printf("\e[90m███\e[91m███\e[92m███\e[93m███\e[94m███\e[95m███\e[96m███\e[97m███");
@@ -156,7 +156,7 @@ int main(int argc, char *argv[]) {
 			printf(output_format[i], colour, output_value[i], used_storage, total_storage);
 			i++;
 		}
-		printf("\e[5E");
+		printf("\e[6E");
 	} else {
 		printf("\e[B\e[%dG%s", (term_size.ws_col / 2) - 6, space_invader_offset);
 
