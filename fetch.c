@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <sys/ioctl.h>
 #include <sys/sysinfo.h>
+#include <sys/wait.h>
 #include "ascii.h"
 
 static const char *ascii_distro = arch_ascii;
@@ -65,6 +66,9 @@ char getarg(const char *arg) {
 }
 
 int main(int argc, char *argv[]) {
+	int pipefd[2];
+	pipe(pipefd);
+
 	/* Command line arguments. */
 	_Bool set_distro = 0, vertical = 0;
 	const char *colour = "36";
@@ -85,26 +89,37 @@ int main(int argc, char *argv[]) {
 	const char *fetch_cache_dir = concat(getenv("HOME"), "/.cache/fetch/");
 	mkdir(fetch_cache_dir, S_IRWXU);
 
+	/* Distro */
+	/*
+	if (fork() == 0) {
+		dup2(pipefd[1], STDOUT_FILENO);
+		char *s = malloc(20);
+		unsigned long i;
+		FILE *fp = fopen("/etc/os-release", "r");
+		getline(&s, &i, fp);
+		fclose(fp);
+		printf("%s Linux", s);
+
+		return 0;
+	}
+
+	char *distro_str;
+	dup2(pipefd[0], STDIN_FILENO);
+	wait(NULL);
+	scanf("%2ms", &distro_str);
+	output_value[0] = distro_str;
+	*/
+
 	/* Packages */
-	int package_count;
-	const char *fetch_packages = concat(fetch_cache_dir, "packages");
-
-	if (system(concat("pacman -Qq | wc -l > ", fetch_packages)) >= 0) {
-		FILE *fpackages = fopen(fetch_packages, "r");
-		fscanf(fpackages, "%d", &package_count);
-		fclose(fpackages);
+	if (fork() == 0) {
+		dup2(pipefd[1], STDOUT_FILENO);
+		system("pacman -Qq | wc -l");
+		return 0;
 	}
 
-	register int number = package_count;
-	int digits = 0;
-	while (number) { number /= 10; digits++; }
-
-	char packages_str[digits + 1];
-	packages_str[digits] = '\0';
-	for (int i = digits - 1; i > -1; i--) {
-		packages_str[i] = (package_count % 10) + '0';
-		package_count /= 10;
-	}
+	char *packages_str;
+	dup2(pipefd[0], STDIN_FILENO);
+	scanf("%ms", &packages_str);
 	output_value[1] = concat(packages_str, " pacman");
 
 	/* Uptime */
