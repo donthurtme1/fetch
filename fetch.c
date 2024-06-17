@@ -152,8 +152,12 @@ int main(int argc, char *argv[]) {
 		memcpy(&storage_bar[i], "#", 1);
 	}
 
-	/* Print stuff. */
-	printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+	/* Print stuff. 18*/
+	int yoffset = (term_size.ws_row - 18) >> 1;
+	for (int i = 0; i < yoffset; i++) {
+		putc('\n', stdout);
+	}
+	printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	printf("\e[16A");
 	i = 0;
 	printf("\e[%s;1m", colour);
