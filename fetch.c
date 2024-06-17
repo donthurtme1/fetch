@@ -153,9 +153,11 @@ int main(int argc, char *argv[]) {
 	}
 
 	/* Print stuff. 18*/
-	int yoffset = (term_size.ws_row - 18) >> 1;
-	for (int i = 0; i < yoffset; i++) {
-		putc('\n', stdout);
+	if (vertical) {
+		int yoffset = (term_size.ws_row - 18) >> 1;
+		for (int i = 0; i < yoffset; i++) {
+			putc('\n', stdout);
+		}
 	}
 	printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	printf("\e[16A");
