@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
 	i = 0;
 	printf("\e[%s;1m", colour);
 	if (!vertical) {
-		printf("\e[2B\e[8C%s", space_invader_offset);
+		printf("\e[2B\e[8C%s", simple_artix);
 
 		printf("\e[3B\e[3G");
 		printf("\e[30m███\e[31m███\e[32m███\e[33m███\e[34m███\e[35m███\e[36m███\e[37m███");

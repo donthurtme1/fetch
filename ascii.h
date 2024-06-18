@@ -41,6 +41,21 @@ static const char simple_arch[] = "\
 /`            `/\
 ";
 
+static const char simple_artix[] = "\
+\e[6D\
+           'A'\e[B\e[14D\
+          'ooo'\e[B\e[15D\
+         'ookxo'\e[B\e[16D\
+         `ookxxo'\e[B\e[17D\
+       '.   `ooko'\e[B\e[18D\
+      'ooo`.   `oo'\e[B\e[19D\
+     'ooxxxoo`.   `'\e[B\e[20D\
+    'ookxxxkooo.`   .\e[B\e[21D\
+   'ookxxkoo'`   .'oo'\e[B\e[22D\
+  'ooxoo'`     .:ooxxo'\e[B\e[23D\
+ 'io'`             `'oo'\e[B\e[24D\
+'`                     `'";
+
 static const char space_invader[] = "\
   ▄     ▄\e[B\e[9D\
   ▄█▄▄▄█▄\e[B\e[9D\
